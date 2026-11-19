@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  .fail { color: red; }
+</style>
+</head>
+<body>
+<h2>Class Result Sheet</h2>
+<button onclick="generateResults()">Generate Results</button>
+<div id="output"></div>
+
+<script>
+const students = [
+  { name: "Kartik", maths: 92, science: 88, english: 95 },
+  { name: "Aarav", maths: 75, science: 68, english: 72 },
+  { name: "Meera", maths: 40, science: 35, english: 45 }
+];
+
+function getPercentage(s) {
+  let total = s.maths + s.science + s.english;
+  return (total / 300 * 100).toFixed(2);
+}
+
+function getGrade(per) {
+  if (per >= 90) return "A";
+  if (per >= 75) return "B";
+  if (per >= 60) return "C";
+  if (per >= 50) return "D";
+  return "F";
+}
+
+function generateResults() {
+  let html = `<table><tr><th>Name</th><th>Total /300</th><th>Percentage</th><th>Grade</th></tr>`;
+  students.forEach(s => {
+    let per = getPercentage(s);
+    let total = s.maths + s.science + s.english;
+    let grade = getGrade(per);
+    let nameClass = grade === "F" ? "fail" : "";
+    html += `<tr><td class="${nameClass}">${s.name} (${per}%)</td><td>${total}</td><td>${per}%</td><td>${grade}</td></tr>`;
+  });
+  html += `</table>`;
+  document.getElementById("output").innerHTML = html;
+}
+</script>
+</body>
+</html>
