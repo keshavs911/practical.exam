@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  #bar { height: 10px; width: 200px; background: #ddd; margin: 10px 0; }
+  #fill { height: 100%; width: 0%; }
+  .pass { color: green; } .fail-rule { color: grey; }
+</style>
+</head>
+<body>
+<h2>Password Strength</h2>
+<input type="password" id="pwd" placeholder="Enter password" oninput="checkPassword()">
+<label><input type="checkbox" onclick="togglePwd()"> Show password</label>
+
+<div id="bar"><div id="fill"></div></div>
+<p id="label"></p>
+<ul id="checklist"></ul>
+
+<script>
+function checkPassword() {
+  let pwd = document.getElementById("pwd").value;
+  let rules = [
+    { text: "At least 8 characters", ok: pwd.length >= 8 },
+    { text: "One uppercase letter", ok: /[A-Z]/.test(pwd) },
+    { text: "One lowercase letter", ok: /[a-z]/.test(pwd) },
+    { text: "One number", ok: /[0-9]/.test(pwd) },
+    { text: "One special symbol", ok: /[^A-Za-z0-9]/.test(pwd) }
+  ];
+  let count = rules.filter(r => r.ok).length;
+
+  // Checklist
+  document.getElementById("checklist").innerHTML = rules.map(r =>
+    `<li class="${r.ok ? 'pass' : 'fail-rule'}">${r.ok ? '✓' : '○'} ${r.text}</li>`
+  ).join("");
+
+  // Bar + Label
+  let fill = document.getElementById("fill");
+  let label = document.getElementById("label");
+  if (pwd === "") { fill.style.width = "0%"; label.innerText = ""; return; }
+  if (count <= 2) { fill.style.width = "33%"; fill.style.background = "red"; label.innerText = "Weak (red)"; label.style.color = "red"; }
+  else if (count <= 4) { fill.style.width = "66%"; fill.style.background = "orange"; label.innerText = "Medium (orange)"; label.style.color = "orange"; }
+  else { fill.style.width = "100%"; fill.style.background = "green"; label.innerText = "Strong (green)"; label.style.color = "green"; }
+}
+function togglePwd() {
+  let input = document.getElementById("pwd");
+  input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+</body>
+</html>
